@@ -5,7 +5,7 @@
 This project involves analyzing a Spotify dataset with various attributes about tracks, albums, and artists using SQL. it covers an end-to-end process of normalizing a demormalized dataset, performing SQL queries of varing complexity (easy, medium, and advanced), and optimizing query performance. The primary goals of the project are to practice advanced SQL skills and generate valuable insights from the dataset.
 
 ## Schema
-```
+```sql
 CREATE TABLE Spotify(
 Artist VARCHAR(255),
 Track VARCHAR(255),
@@ -31,7 +31,9 @@ official_video BOOLEAN,
 Stream BIGINT,
 EnergyLiveness FLOAT,
 most_playedon VARCHAR(50)
-);```
+);
+
+```
 
 SELECT *
 FROM spotify
