@@ -203,7 +203,7 @@ SELECT album, max_energy - min_energy AS difference
 FROM MaxMin;
 ```
 
---21. Find tracks where the energy-to-liveness ration is greater than 1.2.
---22. Calculate the cumulative sum of likes for tracks ordered by the number of views, using window functions.
+**23. Find tracks where the energy-to-liveness ration is greater than 1.2.**
+**24. Calculate the cumulative sum of likes for tracks ordered by the number of views, using window functions.**
 
 
