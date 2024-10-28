@@ -5,7 +5,7 @@
 This project involves analyzing a Spotify dataset with various attributes about tracks, albums, and artists using SQL. it covers an end-to-end process of normalizing a demormalized dataset, performing SQL queries of varing complexity (easy, medium, and advanced), and optimizing query performance. The primary goals of the project are to practice advanced SQL skills and generate valuable insights from the dataset.
 
 ## Schema
-```
+```sql
 CREATE TABLE Spotify(
 Artist VARCHAR(255),
 Track VARCHAR(255),
@@ -34,98 +34,112 @@ most_playedon VARCHAR(50)
 );
 
 ```
-
+## Exploratory Data Analysis
+**1. Get Overview of the dataset.**
+```sql
 SELECT *
 FROM spotify
 LIMIT 100;
+```
+**2. check the total number of rows.**
 
--- EDA
---1. check the total number of rows.
+```sql
 SELECT COUNT(*)
 FROM spotify;
+```
 
---2. Check number of artist.
+**3. Check number of artist.**
+```sql
 SELECT COUNT(DISTINCT artist)
 FROM spotify;
+```
 
---3. Check number of Albums.
+**4. Check number of Albums.**
+```sql
 SELECT COUNT(DISTINCT album)
 FROM spotify;
+```
 
---4. Check how many different types of albums.
+**5. Check how many different types of albums.**
+```sql
 SELECT DISTINCT album_type
 FROM spotify;
+```
 
---5. Check max and min duration of songs.
+**6. Check max and min duration of songs.**
+```sql
 SELECT MAX(duration_min) AS maximun_duration, MIN(duration_min) AS minimum_duration
 FROM spotify;
+```
 
--- Songs can not have duration 0. Hence it is better to delete those songs.
+**7. Songs can not have duration 0. Hence it is better to delete those songs.**
+```sql
 SELECT *
 FROM spotify
 WHERE duration_min=0;
 
 DELETE FROM spotify
 WHERE duration_min=0;
+```
 
---6. Check how many different types of channel.
+**8. Check how many different types of channel.**
 SELECT DISTINCT channel
 FROM spotify;
 
---7. Check the platform where most most songs are played.
+**9. Check the platform where most most songs are played.**
 SELECT DISTINCT most_playedon
 FROM spotify;
 
---8. Retrieve the name of all tracks that have more than 1 billion streams.
+**10. Retrieve the name of all tracks that have more than 1 billion streams.**
 SELECT track
 FROM spotify
 WHERE stream > 1000000000;
 
---9. List all albums along with their respective artists.
+**11. List all albums along with their respective artists.**
 SELECT DISTINCT album, artist
 FROM spotify
 ORDER BY 1;
 
---10. Get the  total number of comments fro tracks where licensed = TRUE.
+**12. Get the  total number of comments fro tracks where licensed = TRUE.**
 SELECT SUM(comments) AS Total_Comments
 FROM spotify
 WHERE licensed='true';
 
---11. Find all tracks that belong to the album type single.
+**13. Find all tracks that belong to the album type single.**
 SELECT track
 FROM spotify
 WHERE album_type ILIKE '%single%';
 
---12. Count the total number of tracks by each artist.
+**14. Count the total number of tracks by each artist.**
 SELECT artist, count(track) AS Total_tracks
 FROM spotify
 GROUP BY 1
 ORDER BY Total_tracks DESC;
 
---13. Calculate the average danceability of tracks in each album.
+**15. Calculate the average danceability of tracks in each album.**
 SELECT album, AVG(danceability) AS Avg_danceability
 FROM spotify
 GROUP BY album;
 
---14. Find the top 5 tracks with the highest energy values
+**16. Find the top 5 tracks with the highest energy values.**
 SELECT track, MAX(energy) AS Total_energy
 FROM spotify
 GROUP BY 1
 ORDER BY Total_energy DESC
 LIMIT 5;
 
---15. List all tracks along with their views and likes where official_video = TRUE.
+**17. List all tracks along with their views and likes where official_video = TRUE.**
 SELECT track, SUM(likes) AS total_likes, SUM(views) AS total_views
 FROM spotify
 WHERE official_video='true'
 GROUP BY track;
 
---16. For each album, calculate the total views of all associated tracks.
+**18. For each album, calculate the total views of all associated tracks.**
 SELECT album, track, SUM(views) AS total_views
 FROM spotify
 GROUP BY 1, 2;
 
---17. Retrieve the track names that have been streamed on Spotify more than YouTube.
+**19. Retrieve the track names that have been streamed on Spotify more than YouTube.**
 SELECT *
 FROM (SELECT track, COALESCE(SUM(CASE WHEN most_playedon='Youtube' THEN stream END), 0) AS streamed_on_youtube,
 COALESCE(SUM(CASE WHEN most_playedon='Spotify' THEN stream END), 0) AS streamed_on_spotify
@@ -135,7 +149,7 @@ ORDER BY 1) AS t1
 WHERE streamed_on_spotify > streamed_on_youtube
 AND streamed_on_youtube <> 0;
 
---18. Find the top 3 most-viewed tracks for each artist using window functions.
+**20. Find the top 3 most-viewed tracks for each artist using window functions.**
 SELECT *
 FROM (SELECT artist, track, SUM(views) AS total_view, DENSE_RANK() OVER(PARTITION BY artist ORDER BY SUM(views) DESC) AS rank
 FROM spotify
@@ -143,7 +157,7 @@ GROUP BY 1, 2
 ORDER BY 1, 3 DESC) AS t1
 WHERE rank <=3;
 
---19. Write a query to find tracks where the liveness score is above the average.
+**21. Write a query to find tracks where the liveness score is above the average.**
 WITH Average AS(
 SELECT track, liveness, AVG(liveness) OVER() AS Avg_liveness
 FROM spotify)
@@ -151,7 +165,7 @@ SELECT *
 FROM Average
 WHERE liveness > Avg_liveness;
 
---20. Use a WITH clause to calculate the difference between the highest and lowest energy values for tracks in each album.
+**22. Use a WITH clause to calculate the difference between the highest and lowest energy values for tracks in each album.**
 WITH MaxMin AS(
 SELECT album, MAX(energy) AS max_energy, MIN(energy) AS min_energy
 FROM spotify
