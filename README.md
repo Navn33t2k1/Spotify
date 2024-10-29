@@ -203,8 +203,23 @@ SELECT album, max_energy - min_energy AS difference
 FROM MaxMin;
 ```
 
-**23. Find tracks where the energy-to-liveness ration is greater than 1.2.**
+**23. Find tracks where the energy-to-liveness ratio is greater than 1.2.**
+```sql
+WITH energy_to_liveness_ratio AS(
+SELECT track, energy/liveness AS ratio
+FROM spotify
+)
+SELECT *
+FROM energy_to_liveness_ratio
+WHERE ratio > 1.2;
+```
 
 **24. Calculate the cumulative sum of likes for tracks ordered by the number of views, using window functions.**
+```sql
+SELECT track, views, SUM(likes) OVER(ORDER BY likes) AS Cumulative_sum
+FROM spotify
+WHERE likes <>0
+ORDER BY 2;
+```
 
 
